@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical" >
+    
+    
+    <TextView
+        android:id="@+id/Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:paddingBottom="20dp"
+        android:text="@string/shuttle_finder"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#663399"
+        android:textSize="30sp" />
+
+    <Button
+        android:id="@+id/Ask_Home"
+        android:layout_width="138dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:text="@string/set_home" />
+
+     <EditText
+            android:id="@+id/Home_Address"
+            android:layout_width="252dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:inputType="textPostalAddress" />
+
+     <Button
+         android:id="@+id/Submit_Home"
+        android:layout_width="138dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button"
+        android:gravity="center"
+        android:layout_gravity="center"
+         android:text="@string/submit" />
+    
+</LinearLayout>

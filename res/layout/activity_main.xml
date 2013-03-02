@@ -1,0 +1,102 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical"
+    tools:context=".MainActivity" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:paddingBottom="20dp"
+        android:text= "@string/shuttle_finder"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#663399"
+        android:textSize="30sp" />
+
+    <Button
+        android:id="@+id/Get_Home"
+        android:layout_width="138dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:onClick="gethomeclick"
+        android:text="@string/get_home" />
+
+    <Button
+        android:id="@+id/Get_Out"
+        android:layout_width="138dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/button"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:onClick="getoutclick"
+        android:text="@string/get_out" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/find_me"
+        android:textColor="#663399"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/Nor"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/button_small"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:text="@string/north" />
+
+    <Button
+        android:id="@+id/sou"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/button_small"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:text="@string/south" />
+
+    <Button
+        android:id="@+id/ea"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/button_small"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:text="@string/east" />
+
+    <Button
+        android:id="@+id/cent"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+         android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/button_small"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:text="@string/central" />
+
+</LinearLayout>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <string name="app_name">Visual_Test</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="shuttle_finder">Shuttle Finder</string>
+    <string name="where">Where are you going?</string>
+    <string name="north">North</string>
+    <string name="south">South</string>
+    <string name="east">East</string>
+    <string name="central">Central</string>
+    <string name="get_home">Get Me Home</string>
+    <string name="get_out">Get Me Out of Here</string>
+    <string name="find_me">Find Me The</string>
+    <string name="submit">Submit</string>
+    <string name="closest_stop">  The closest stop is:</string>
+    <string name="time_to">  Time to arrival:</string>
+     <string name="set_home">  Set Home Address</string>
+    <string name="change_home">  Change Home Address</string>
+    <string name="get_directions">Get Directions</string>
+    <string name="get_off">Get Off Shuttle at:</string>
+    <string name="alert_me">Let Me Know When to Get Off</string>
+    <string name="switch_to">  Switch at Reg to:</string>
+    <string name = "back">  Back</string>
+    
+    
+
+</resources>
