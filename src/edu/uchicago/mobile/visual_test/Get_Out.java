@@ -1,7 +1,10 @@
 package edu.uchicago.mobile.visual_test;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
@@ -16,6 +19,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Get_Out extends Activity implements OnClickListener {
 	
@@ -45,13 +51,12 @@ public class Get_Out extends Activity implements OnClickListener {
 
 		end = extras.getString("go_to");
 		calls=0;
-		
 
-		
+ 
 		
 	}
 	
-	public void once_changed(Location loc)
+	public void once_changed(Location loc) throws IOException, JSONException
 	{
 	//	if(calls!=1)
 	//		return;
@@ -64,6 +69,7 @@ public class Get_Out extends Activity implements OnClickListener {
 		String start_name=info[0];
 		String route_name=info[1];
 		String end_name=info[2];
+		String time = info[3];
 		
 		Button change = (Button)findViewById(R.id.Get_On);
 		String set = "Get on the " + route_name + " at";
@@ -75,10 +81,9 @@ public class Get_Out extends Activity implements OnClickListener {
 		ct = (TextView)findViewById(R.id.dropoff_at);
 		ct.setText(end_name);
 		
-		int a=api_class.arrival_time(route_name, end_name);
 		
 		ct = (TextView)findViewById(R.id.arrival_time);
-		ct.setText(String.valueOf(a));
+		ct.setText(time);
 		return;
 		
 	}
@@ -87,6 +92,23 @@ public class Get_Out extends Activity implements OnClickListener {
 		public void onLocationChanged(Location arg0){
 			calls++;
 			/*Api_use api_class = new Api_use();
+			 
+		// Build notification
+		// Actions are just fake
+		Notification noti = new NotificationCompat.Builder(this)
+		        .setContentTitle("You're within 50 meters")
+		        .setContentText("You're Close!").setSmallIcon(android.R.drawable.ic_menu_compass)
+		        .build();
+		    
+		  
+		NotificationManager notificationManager = 
+		  (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+		// Hide the notification after its selected
+		noti.flags |= Notification.FLAG_AUTO_CANCEL;
+
+		notificationManager.notify(0, noti); 
+			 
 			if(set_alert)
 			{
 				if(api_class.get_distance(api_class.end_loc(end), arg0)<50)
@@ -118,7 +140,15 @@ public class Get_Out extends Activity implements OnClickListener {
 				}
 			}*/
 				
-			once_changed(arg0);
+			try {
+				once_changed(arg0);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return;
 		}
 	

@@ -1,5 +1,9 @@
 package edu.uchicago.mobile.visual_test;
 
+import java.io.IOException;
+
+import org.json.JSONException;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -9,13 +13,11 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.widget.Button;
 import android.widget.TextView;
 
 public class Get_Home extends Activity implements OnClickListener{
 
-	private static int calls=0;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,10 +39,9 @@ public class Get_Home extends Activity implements OnClickListener{
 		
 	}
 	
-	public void once_changed(Location loc)
+	public void once_changed(Location loc) throws IOException, JSONException
 	{
-		//if (calls!=1)
-			//return;
+
 		
 		SharedPreferences myPrefs = getSharedPreferences("default", Context.MODE_PRIVATE);
 		String home = myPrefs.getString("home_address", "none");
@@ -55,6 +56,7 @@ public class Get_Home extends Activity implements OnClickListener{
 		String start_name=info[0];
 		String route_name=info[1];
 		String end_name=info[2];
+		String time=info[3];
 		
 		TextView ct = (TextView)findViewById(R.id.pickup_at);
 		ct.setText(start_name);
@@ -62,19 +64,27 @@ public class Get_Home extends Activity implements OnClickListener{
 		ct = (TextView)findViewById(R.id.pickup_at);
 		ct.setText("Get on the "+route_name+ " at " +start_name);
 		
-		int b=api_class.arrival_time(route_name, end_name);
+		
 		
 		ct = (TextView)findViewById(R.id.time_home);
 
-		ct.setText(String.valueOf(b));
+		ct.setText(time);
 		return;
 	}
 	
 	android.location.LocationListener ll=new android.location.LocationListener() {
 		public void onLocationChanged(Location arg0){
-			calls++;
-			once_changed(arg0);
+			try {
+				once_changed(arg0);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			//return;
+ catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	
 		public void onProviderDisabled(String arg0){}
