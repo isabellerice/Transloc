@@ -26,7 +26,7 @@ public class GetAddress extends Activity implements OnClickListener {
 		
 		
 		EditText add = (EditText) this.findViewById(R.id.Address);
-		i.putExtra("go_to", add.toString());
+		i.putExtra("go_to", add.getText().toString());
 		
 		this.startActivity(i);
 	}

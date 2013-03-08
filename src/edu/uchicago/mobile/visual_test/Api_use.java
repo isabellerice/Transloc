@@ -22,15 +22,20 @@ import org.json.*;
 
 public class Api_use {
 
-	private static String GEOCODE = "http://maps.googleapis.com/maps/api/geocode/json?";
-	
-	public boolean need_switch(double lat, double longitude, String end_address)
-	{
-		//true if you need to switch, false otherwise
-		return false;
-	}
-	
-    public String[] travel_info(double lat, double longitude, String end_address)  throws IOException, JSONException {
+    private static String GEOCODE = "http://maps.googleapis.com/maps/api/geocode/json?";
+
+    public static boolean need_switch(double lat, double lng, HashMap stop) throws IOException, JSONException
+    {
+        double stop_lat = ((JSONObject)stop.get("location")).getDouble("lat");
+        double stop_lng = ((JSONObject)stop.get("location")).getDouble("lng");
+        double dist = RouteFinder.get_distance(lat, lng, stop_lat, stop_lng);
+        if (dist > 1600) return true;
+        //true if you need to switch, false otherwise
+        return false;
+    }
+
+    public static String[] travel_info(double lat, double longitude, String end_address)
+        throws IOException, JSONException {
         String ADDRESS = "address=" + end_address.replaceAll(" ", "+");
 
         URL url = new URL(GEOCODE + ADDRESS + "&sensor=true");
@@ -51,55 +56,50 @@ public class Api_use {
         HashMap start = (HashMap)directions.get(0);
         HashMap route = (HashMap)directions.get(1);
         HashMap end   = (HashMap)directions.get(2);
-        Trip trip = new Trip(start, route, end);
-
-
-        String ret[]={(String)start.get("name"), (String)route.get("long_name"),
-                      (String)end.get("name"), trip.I_EST};
-        //return start name, route name, end name, arrival at initial stop
-        return ret;
-
-    //String ret[]={"a", "b", "c", "d"};
-    //return ret;
+        if (route.isEmpty()) {
+            String ret[] = {"No shuttle servce."};  // None of the Big 4 are running
+            return ret;
         }
-	
-	Location end_loc(String end_name)
-	{
-		//return the latitude and longitude
-		Location location=null;
-		return location;
-	}
-	
-	public String[] find_shuttle(double lat, double longitude, String shuttle)
-	{
-		//return closest stop, time estimate
-		String ret[]={"a", "b", "c"};
-		return ret;
-	}
-	
-	public double get_distance(Location l1, Location l2)
-	{
-		double lat1=l1.getLatitude();
-		double long1=l1.getLongitude();
-		double lat2=l1.getLatitude();
-		double long2=l2.getLongitude();
-		
-		double R = 6371; //radius of the earth
-		double dLat=(lat1-lat2); //difference in latitudes
-		double dLong=(long1-long2);//difference in longitudes
-		
-		double a = 
-				Math.sin(dLat/2)*Math.sin(dLat/2) + 
-				Math.cos((Math.PI/180)*lat1) * Math.cos((Math.PI/180)*lat2) *
-				Math.sin(dLong/2) * Math.sin(dLong/2);
-		
-		double c = 2* Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-		double d = R * c * 1000; //distance in meters
-		return d;
-		
-	}
-}
-	
+        if (start.equals(end)) {
+            String ret[] = {"Walking will be faster!"};
+            return ret;
+        }
+
+        Trip trip = new Trip(start, route, end);
+        String ret[]={(String)start.get("name"), (String)route.get("long_name"),
+                      (String)end.get("name"), trip.I_EST.toString()};
+        //return start name, route name, end name, arrival at initial stop
+
+        return ret;
+    }
+
+    public static String[] find_shuttle(double lat, double lng, String route_id) throws IOException, JSONException
+    {
+        //return closest stop, time estimate
+        String id = TransLocAPI.getAgency("uchicago");
+        ArrayList<HashMap> routes = TransLocAPI.getRoutes(id);
+        HashMap route = new HashMap();
+
+        for (HashMap temp_route : routes) {
+            if (route_id.equals((String)temp_route.get("route_id"))) {
+                route = temp_route;
+                break;
+            }
+        }
+
+        HashMap near_stop = RouteFinder.getNearestStopOnRoute(route, lat, lng);
+        Trip trip = new Trip(near_stop, route, near_stop);
+        String ret[] = {(String)near_stop.get("name"), trip.I_EST.toString()};
+
+        return ret;
+    }
+
+    public static void main(String[] args) throws IOException, JSONException {
+        System.out.println(travel_info(41.791393,-87.599776,"5400 S Maryland Ave Chicago IL 60615"));
+        System.out.println(find_shuttle(41.791393,-87.599776,"8000576"));
+        return;
+    }
+}	
 	
 	
 

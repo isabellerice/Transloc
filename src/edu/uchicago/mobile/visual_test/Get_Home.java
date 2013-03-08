@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.json.JSONException;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -13,22 +14,29 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.widget.Button;
 import android.widget.TextView;
 
+
 public class Get_Home extends Activity implements OnClickListener{
 
+	int calls=0;
 	
-	public void onCreate(Bundle savedInstanceState) {
+	@SuppressLint("NewApi") public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//need to figure out which view based on switch
 		this.setContentView(R.layout.go_home);
 		
+		StrictMode.ThreadPolicy policy = new StrictMode.
+				ThreadPolicy.Builder().permitAll().build();
+				StrictMode.setThreadPolicy(policy);
+		
     	LocationManager locationManager= (LocationManager) 
 				this.getSystemService(Context.LOCATION_SERVICE);
 				locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,(long) 0, (float) 0,  ll);
-				locationManager.requestLocationUpdates(
-				LocationManager.GPS_PROVIDER, 0, 0, ll);
+		//locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ll);
+		locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, ll, null);
 
     	
 		Button a = (Button) this.findViewById(R.id.change_address);
@@ -36,6 +44,7 @@ public class Get_Home extends Activity implements OnClickListener{
 		
 		Button b = (Button) this.findViewById(R.id.back);
 		b.setOnClickListener(this);
+		return;
 		
 	}
 	
@@ -45,6 +54,8 @@ public class Get_Home extends Activity implements OnClickListener{
 		
 		SharedPreferences myPrefs = getSharedPreferences("default", Context.MODE_PRIVATE);
 		String home = myPrefs.getString("home_address", "none");
+
+        System.out.println(home);
 		
 		
 		Api_use api_class= new Api_use();
@@ -63,28 +74,28 @@ public class Get_Home extends Activity implements OnClickListener{
 		
 		ct = (TextView)findViewById(R.id.pickup_at);
 		ct.setText("Get on the "+route_name+ " at " +start_name);
-		
-		
-		
 		ct = (TextView)findViewById(R.id.time_home);
-
 		ct.setText(time);
 		return;
 	}
 	
 	android.location.LocationListener ll=new android.location.LocationListener() {
 		public void onLocationChanged(Location arg0){
-			try {
-				once_changed(arg0);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			calls++;
+			if (calls==1){
+				try {
+					once_changed(arg0);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//return;
+				catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-			//return;
- catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			return;
 		}
 	
 		public void onProviderDisabled(String arg0){}
@@ -106,6 +117,7 @@ public class Get_Home extends Activity implements OnClickListener{
         		break;
 		
 		}
+		return;
 	}
 	
 }

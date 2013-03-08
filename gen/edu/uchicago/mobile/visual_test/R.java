@@ -59,7 +59,9 @@ public final class R {
         public static final int full_directions_switch=0x7f030003;
         public static final int get_address=0x7f030004;
         public static final int go_home=0x7f030005;
-        public static final int set_home=0x7f030006;
+        public static final int just_walk=0x7f030006;
+        public static final int not_running=0x7f030007;
+        public static final int set_home=0x7f030008;
     }
     public static final class menu {
         public static final int activity_main=0x7f060000;
@@ -78,8 +80,10 @@ public final class R {
         public static final int get_off=0x7f040012;
         public static final int get_out=0x7f04000a;
         public static final int hello_world=0x7f040001;
+        public static final int just_walk=0x7f040017;
         public static final int menu_settings=0x7f040002;
         public static final int north=0x7f040005;
+        public static final int not_running=0x7f040016;
         public static final int set_home=0x7f04000f;
         public static final int shuttle_finder=0x7f040003;
         public static final int south=0x7f040006;

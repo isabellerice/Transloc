@@ -23,157 +23,178 @@ import org.json.*;
 
 public class TransLocAPI {
 
-	  private static String TRANSLOC = "http://api.transloc.com/1.1/";
+	private static String TRANSLOC = "http://api.transloc.com/1.1/";
 
-	    /*
-	    Method to get a list of agencies from TransLoc
-	    */
-	    public static String getAgency(String name) throws IOException, JSONException {
-	        URL url = new URL(TRANSLOC + "agencies.json");
-	        URLConnection connection = url.openConnection();
+    /*
+    Method to get a list of agencies from TransLoc
+    */
+    public static String getAgency(String name) throws IOException, JSONException {
+        URL url = new URL(TRANSLOC + "agencies.json");
+        URLConnection connection = url.openConnection();
 
-	        String line;
-	        StringBuilder builder = new StringBuilder();
-	        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-	        while((line = reader.readLine()) != null) {
-	        builder.append(line);
-	        }
+        String line;
+        StringBuilder builder = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        while((line = reader.readLine()) != null) {
+        builder.append(line);
+        }
 
-	        String agency = ParseJSON.parseAgency(name, builder.toString());
-	        return agency;
-	    }
+        String agency = ParseJSON.parseAgency(name, builder.toString());
+        return agency;
+    }
 
-	    /*
-	    Method to get a list of routes from TransLoc
-	    */
-	    public static ArrayList<HashMap> getRoutes(String id) throws IOException, JSONException {
-	        URL url = new URL(TRANSLOC + "routes.json?agencies=" + id);
-	        URLConnection connection = url.openConnection();
+    /*
+    Method to get a list of routes from TransLoc
+    */
+    public static ArrayList<HashMap> getRoutes(String id) throws IOException, JSONException {
+        URL url = new URL(TRANSLOC + "routes.json?agencies=" + id);
+        URLConnection connection = url.openConnection();
 
-	        String line;
-	        StringBuilder builder = new StringBuilder();
-	        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-	        while((line = reader.readLine()) != null) {
-	        builder.append(line);
-	        }
+        String line;
+        StringBuilder builder = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        while((line = reader.readLine()) != null) {
+        builder.append(line);
+        }
 
-	        ArrayList<HashMap> routes = ParseJSON.parseRoutes(id, builder.toString());
-	        return routes;
-	    }
+        ArrayList<HashMap> routes = ParseJSON.parseRoutes(id, builder.toString());
+        return routes;
+    }
 
-	    public static ArrayList<HashMap> getStops(String id) throws IOException, JSONException {
-	        URL url = new URL(TRANSLOC + "stops.json?agencies=" + id);
-	        URLConnection connection = url.openConnection();
+    public static ArrayList<HashMap> getStops(String id) throws IOException, JSONException {
+        URL url = new URL(TRANSLOC + "stops.json?agencies=" + id);
+        URLConnection connection = url.openConnection();
 
-	        String line;
-	        StringBuilder builder = new StringBuilder();
-	        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-	        while((line = reader.readLine()) != null) {
-	        builder.append(line);
-	        }
+        String line;
+        StringBuilder builder = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        while((line = reader.readLine()) != null) {
+        builder.append(line);
+        }
 
-	        ArrayList<HashMap> stops = ParseJSON.parseStops(builder.toString());
-	        return stops;
-	    }
+        ArrayList<HashMap> stops = ParseJSON.parseStops(builder.toString());
+        return stops;
+    }
 
-	    public static ArrayList<HashMap> getEstimate(String id, String route, String stop) throws IOException, JSONException {
-	        URL url = new URL(TRANSLOC + "arrival-estimate.json?"
-	                                   + "agencies=" + id
-	                                   + "&routes="  + route
-	                                   + "&stops="   + stop);
-	        URLConnection connection = url.openConnection();
+    public static ArrayList<HashMap> getEstimate(String id, String route_id, String stop_id) throws IOException, JSONException {
+        URL url = new URL(TRANSLOC + "arrival-estimates.json?"
+                                   + "agencies=" + id
+                                   + "&routes="  + route_id
+                                   + "&stops="   + stop_id);
+        URLConnection connection = url.openConnection();
 
-	        String line;
-	        StringBuilder builder = new StringBuilder();
-	        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-	        while((line = reader.readLine()) != null) {
-	        builder.append(line);
-	        }
+        String line;
+        StringBuilder builder = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        while((line = reader.readLine()) != null) {
+        builder.append(line);
+        }
 
-	        ArrayList<HashMap> estimates = ParseJSON.parseEstimate(builder.toString());
-	        return estimates;
-	    }
+        ArrayList<HashMap> estimates = ParseJSON.parseEstimate(builder.toString());
+        return estimates;
+    }
 
-	    public static void main(String[] args) throws IOException, JSONException {
-	        String id = getAgency("uchicago");
-	        System.out.println(id);
-	        System.out.println(getRoutes(id));
-	        System.out.println(getStops(id));
-	    }
-	}
+    public static void main(String[] args) throws IOException, JSONException {
+        String agency = "uchicago";
+        String id = getAgency(agency);
+        ArrayList<HashMap> routes = getRoutes(id);
+        ArrayList<HashMap> stops  = getStops(id);
+        ArrayList<HashMap> estimates = getEstimate(id, "8000576", "8036212");
+    }
+}
 
-	class ParseJSON {
+class ParseJSON {
 
-	    public static String parseAgency(String name, String json) throws JSONException {
-	        JSONObject jObj = new JSONObject(json);
-	        JSONArray temp_data = (JSONArray)jObj.get("data");
-	 
-	        String ret = "";
+    public static String parseAgency(String name, String json) throws JSONException {
+        JSONObject jObj = new JSONObject(json);
+        JSONArray temp_data = (JSONArray)jObj.get("data");
+ 
+        String ret = "";
 
-	        for (int i=0; i < temp_data.length(); i++) {
-	            if ((((JSONObject)temp_data.get(i)).getString("name")).equals(name))
-	                ret = (String)((JSONObject)temp_data.get(i)).getString("agency_id");
-	        }
-	        return ret;
-	    }
+        for (int i=0; i < temp_data.length(); i++) {
+            if ((((JSONObject)temp_data.get(i)).getString("name")).equals(name))
+                ret = (String)((JSONObject)temp_data.get(i)).getString("agency_id");
+        }
+        return ret;
+    }
 
-	    public static ArrayList<HashMap> parseRoutes(String id, String json) throws JSONException {
-	        JSONObject jObj = new JSONObject(json);
-	        JSONArray temp_data = jObj.getJSONObject("data").getJSONArray(id);
-	        ArrayList<HashMap> routes = new ArrayList<HashMap>();
+    public static ArrayList<HashMap> parseRoutes(String id, String json) throws JSONException {
+        JSONObject jObj = new JSONObject(json);
+        JSONArray temp_data = jObj.getJSONObject("data").getJSONArray(id);
+        ArrayList<HashMap> routes = new ArrayList<HashMap>();
 
-	        for (int i=0; i < temp_data.length(); i++) {
-	            HashMap<String,String> pairs = new HashMap<String,String>();
-	            JSONObject j = temp_data.optJSONObject(i);
-	            Iterator it = j.keys();
-	            while (it.hasNext()) {
-	                String n = (String)it.next();
-	                pairs.put(n,j.getString(n));
-	            }
-	            routes.add(pairs);
-	        }
-	        return routes;
-	    }
+        for (int i=0; i < temp_data.length(); i++) {
+            HashMap<String,Object> pairs = new HashMap<String,Object>();
+            JSONObject j = temp_data.optJSONObject(i);
+            Iterator it = j.keys();
+            while (it.hasNext()) {
+                String n = (String)it.next();
+                if (n.equals("stops")) {
+                    ArrayList<Integer> list = new ArrayList<Integer>();
+                    JSONArray jArray = j.getJSONArray(n);
+                    for (int k=0; k<jArray.length(); k++) {
+                        Integer sid = jArray.getInt(k);
+                        list.add(sid);
+                    }
+                    pairs.put(n,list);
+                }
+                else
+                    pairs.put(n,j.get(n));
+            }
+            routes.add(pairs);
+        }
+        return routes;
+    }
 
-	    public static ArrayList<HashMap> parseStops(String json) throws JSONException {
-	        JSONObject jObj = new JSONObject(json);
-	        JSONArray temp_data = jObj.getJSONArray("data");
-	        ArrayList<HashMap> stops = new ArrayList<HashMap>();
+    public static ArrayList<HashMap> parseStops(String json) throws JSONException {
+        JSONObject jObj = new JSONObject(json);
+        JSONArray temp_data = jObj.getJSONArray("data");
+        ArrayList<HashMap> stops = new ArrayList<HashMap>();
 
-	        for (int i=0; i < temp_data.length(); i++) {
-	            HashMap<String,String> pairs = new HashMap<String,String>();
-	            JSONObject j = temp_data.optJSONObject(i);
-	            Iterator it = j.keys();
-	            while (it.hasNext()) {
-	                String n = (String)it.next();
-	                pairs.put(n,j.getString(n));
-	            }
-	            stops.add(pairs);
-	        }
-	        return stops;
-	    }
+        for (int i=0; i < temp_data.length(); i++) {
+            HashMap<String,Object> pairs = new HashMap<String,Object>();
+            JSONObject j = temp_data.optJSONObject(i);
+            Iterator it = j.keys();
+            while (it.hasNext()) {
+                String n = (String)it.next();
+                if (n.equals("routes")) {
+                    ArrayList<Integer> list = new ArrayList<Integer>();
+                    JSONArray jArray = j.getJSONArray(n);
+                    for (int k=0; k<jArray.length(); k++) {
+                        Integer rid = jArray.getInt(k);
+                        list.add(rid);
+                    }
+                    pairs.put(n,list);
+                }
+                else
+                    pairs.put(n,j.get(n));
+            }
+            stops.add(pairs);
+        }
+        return stops;
+    }
 
-	    public static ArrayList<HashMap> parseEstimate(String json) throws JSONException {
-	        JSONObject jObj = new JSONObject(json);
-	        JSONArray temp_data = jObj.getJSONArray("data").getJSONObject(0).getJSONArray("arrivals");
-	        ArrayList<HashMap> estimates = new ArrayList<HashMap>();
+    public static ArrayList<HashMap> parseEstimate(String json) throws JSONException {
+        JSONObject jObj = new JSONObject(json);
+        JSONArray temp_data = jObj.getJSONArray("data").getJSONObject(0).getJSONArray("arrivals");
+        ArrayList<HashMap> estimates = new ArrayList<HashMap>();
 
-	        for (int i=0; i < temp_data.length(); i++) {
-	            HashMap<String,String> pairs = new HashMap<String,String>();
-	            JSONObject j = temp_data.optJSONObject(i);
-	            Iterator it = j.keys();
-	            while (it.hasNext()) {
-	                String n = (String)it.next();
-	                pairs.put(n,j.getString(n));
-	            }
-	            estimates.add(pairs);
-	        }
-	        return estimates;
-	    }
+        for (int i=0; i < temp_data.length(); i++) {
+            HashMap<String,Object> pairs = new HashMap<String,Object>();
+            JSONObject j = temp_data.optJSONObject(i);
+            Iterator it = j.keys();
+            while (it.hasNext()) {
+                String n = (String)it.next();
+                pairs.put(n,j.get(n));
+            }
+            estimates.add(pairs);
+        }
+        return estimates;
+    }
 
-	    public static void main(String[] args) throws IOException {
-	        return;
-	    }
+    public static void main(String[] args) throws IOException {
+        return;
+    }
 	}
 
 

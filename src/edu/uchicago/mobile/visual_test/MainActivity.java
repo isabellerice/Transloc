@@ -14,31 +14,48 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class MainActivity extends Activity implements OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         
-		Button a = (Button) this.findViewById(R.id.Get_Home);
-		a.setOnClickListener(this);
-		
-		Button b = (Button) this.findViewById(R.id.Get_Out);
-		b.setOnClickListener(this);
-		
-		Button c = (Button) this.findViewById(R.id.Nor);
-		c.setOnClickListener(this);
-		
-		Button d = (Button) this.findViewById(R.id.sou);
-		d.setOnClickListener(this);
-		
-		Button e = (Button) this.findViewById(R.id.ea);
-		e.setOnClickListener(this);
-		
-		Button f = (Button) this.findViewById(R.id.cent);
-		f.setOnClickListener(this);
+        Calendar time = new GregorianCalendar();
+        int hour = time.get(Calendar.HOUR_OF_DAY);
+        
+        if(hour>=17 || hour<3)
+        {
+        	setContentView(R.layout.activity_main);
+
+        	Button a = (Button) this.findViewById(R.id.Get_Home);
+        	a.setOnClickListener(this);
+
+        	Button b = (Button) this.findViewById(R.id.Get_Out);
+        	b.setOnClickListener(this);
+
+        	Button c = (Button) this.findViewById(R.id.Nor);
+        	c.setOnClickListener(this);
+
+        	Button d = (Button) this.findViewById(R.id.sou);
+        	d.setOnClickListener(this);
+
+        	Button e = (Button) this.findViewById(R.id.ea);
+        	e.setOnClickListener(this);
+
+        	Button f = (Button) this.findViewById(R.id.cent);
+        	f.setOnClickListener(this);
+        }
+        else
+        {
+        	setContentView(R.layout.not_running);
+            System.out.println(hour);
+            System.out.println(time);
+
+        }
+        return;
     }
  
 	android.location.LocationListener ll=new android.location.LocationListener() {
@@ -59,7 +76,7 @@ public class MainActivity extends Activity implements OnClickListener {
     public void gethomeclick() {
     	SharedPreferences prefs = getSharedPreferences("default", Context.MODE_PRIVATE);
     	String home = prefs.getString("home_address", "none");
-
+    	System.out.println(home);
         //if we have an address saved
     	if (home != null && home!= "none") {
         	Intent i = new Intent(this, Get_Home.class);
@@ -69,10 +86,12 @@ public class MainActivity extends Activity implements OnClickListener {
         }
     	
     	else{ 
+    		System.out.println("HERE");
     		//if we don't have an addressed saved, go to set the address
     		Intent i = new Intent(this, SetHome.class);
     		this.startActivity(i);
     	}
+    	return;
         
     }
     
@@ -82,6 +101,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		
 		//start activity
     	this.startActivity(i);
+    	return;
     }
     
     public void findme(String shuttle) {
@@ -94,6 +114,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		//start activity
     	this.startActivity(i);
+    	return;
     }
 
 
@@ -119,7 +140,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		    	 findme("Central");
 		       break;
 	      }
-		
+	      return;	
 	}
     
 }

@@ -23,6 +23,8 @@
     <string name="alert_me">Let Me Know When to Get Off</string>
     <string name="switch_to">  Switch at Reg to:</string>
     <string name = "back">  Back</string>
+    <string name = "not_running">The shuttles are not currently running</string>
+    <string name= "just_walk">You\'re way too close, just walk it.</string>
     
     
 

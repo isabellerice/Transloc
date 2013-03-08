@@ -19,10 +19,7 @@ public class SetHome extends Activity implements OnClickListener {
 		
 		Button b = (Button) this.findViewById(R.id.Submit_Home);
 		b.setOnClickListener(this);
-		
-		Button c = (Button) this.findViewById(R.id.back);
-		c.setOnClickListener(this);
-		
+
 	}
 	
     public void onClick(View v) {
@@ -31,7 +28,7 @@ public class SetHome extends Activity implements OnClickListener {
     	
     	SharedPreferences prefs = getSharedPreferences("default", Context.MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putString("home_address", add.toString());
+        prefsEditor.putString("home_address", add.getText().toString());
         prefsEditor.commit();
         
         Intent i = new Intent(this, MainActivity.class);
