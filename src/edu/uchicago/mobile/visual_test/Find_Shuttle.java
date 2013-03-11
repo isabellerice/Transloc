@@ -1,6 +1,7 @@
 package edu.uchicago.mobile.visual_test;
 
 import java.io.IOException;
+import java.sql.Time;
 
 import org.json.JSONException;
 
@@ -52,12 +53,17 @@ public class Find_Shuttle extends Activity implements OnClickListener {
 	//	if (calls!=1)
 		//	return;
 		shuttle= getIntent().getExtras().getString("shuttle");
-		Api_use api_class= new Api_use();
 		
+		long time_now = System.currentTimeMillis();
+		Time tn = new Time(time_now);
+		
+		Api_use api_class= new Api_use();
+
 		String info[]= api_class.find_shuttle(loc.getLatitude(), loc.getLongitude(), shuttle);
 		
 		String nearest_stop=info[0];
-		String time=info[1];
+		//RESET
+		String time=String.valueOf((Api_use.time_diff_sec(tn, Time.valueOf(info[1]))/60)) + " minutes";
 		
 		TextView set=(TextView)this.findViewById(R.id.pickup_at);
 		set.setText(nearest_stop);

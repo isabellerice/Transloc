@@ -18,12 +18,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.lang.Math;
 import org.json.*;
+import java.util.Date;
+import java.sql.Time;
 
 
 public class Api_use {
 
     private static String GEOCODE = "http://maps.googleapis.com/maps/api/geocode/json?";
 
+    
+    public static long time_diff_sec(Time first, Time second) {
+    	System.out.println(first);
+    	System.out.println(second);
+        long first_sec = first.getSeconds() + 60*first.getMinutes() + 60*60*first.getHours();
+        long second_sec = second.getSeconds() + 60*second.getMinutes() + 60*60*second.getHours();
+        long midnight_sec = 59 + 60+59 + 60*60*23;
+
+        if (second_sec > first_sec) {
+            return second_sec - first_sec;
+
+        } else {
+            return (midnight_sec - second_sec) + first_sec;
+        }
+    }
+    
+    
     public static boolean need_switch(double lat, double lng, HashMap stop) throws IOException, JSONException
     {
     	
@@ -166,10 +185,26 @@ public class Api_use {
         }
     
     
-    public static String[] find_shuttle(double lat, double lng, String route_id) throws IOException, JSONException
+    public static String[] find_shuttle(double lat, double lng, String iroute) throws IOException, JSONException
     {
         //return closest stop, time estimate
         String id = TransLocAPI.getAgency("uchicago");
+        String route_id="";
+        if( iroute.equalsIgnoreCase("North")){
+    		route_id = "8000576";  // North
+        }
+        if( iroute.equalsIgnoreCase("South")){
+        	route_id="8000580";
+        }
+        if (iroute.equalsIgnoreCase("East")){
+        	route_id="8000560";
+        }
+        if(iroute.equalsIgnoreCase("Central")){
+    		route_id = "8000548";
+        }
+        System.out.println(route_id);
+        
+        
         ArrayList<HashMap> routes = TransLocAPI.getRoutes(id);
         HashMap route = new HashMap();
 
@@ -179,7 +214,7 @@ public class Api_use {
                 break;
             }
         }
-
+        
         HashMap near_stop = RouteFinder.getNearestStopOnRoute(route, lat, lng);
         Trip trip = new Trip(near_stop, route, near_stop);
         String ret[] = {(String)near_stop.get("name"), trip.I_EST.toString(), trip.F_EST.toString()};

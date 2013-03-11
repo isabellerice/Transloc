@@ -76,6 +76,7 @@ public class RouteFinder {
 		HashMap min_stop = new HashMap();
 
 		for (HashMap stop : stops) {
+			System.out.println(route);
 			if (((ArrayList<Integer>)stop.get("routes")).contains(Integer.parseInt((String)route.get("route_id")))) {
 				double stop_lat = ((JSONObject)stop.get("location")).getDouble("lat");
 				double stop_lng = ((JSONObject)stop.get("location")).getDouble("lng");

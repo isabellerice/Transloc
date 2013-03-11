@@ -1,6 +1,7 @@
 package edu.uchicago.mobile.visual_test;
 
 import java.io.IOException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -31,7 +32,7 @@ import android.widget.TextView;
 public class Get_Home extends Activity implements OnClickListener{
 
 	int calls=0;
-	int end_time=0;
+	String end_time;
 	double lat, lng;
 	public HashMap stop;
 	
@@ -80,9 +81,13 @@ public class Get_Home extends Activity implements OnClickListener{
 		
 		if (Api_use.need_switch(loc.getLatitude(),loc.getLongitude(), stop))
 		{
+			long time_now = System.currentTimeMillis();
+			Time tn = new Time(time_now);
+			
 			this.setContentView(R.layout.full_directions_switch);
 			//make two calls, set variables
 			String info_one[]=Api_use.travel_info_home(loc.getLatitude(), loc.getLongitude(), "1100 East 57th Street Chicago");
+			
 			
 			String info_two[]=Api_use.travel_info_home(41.791537, -87.599723, home);
 			
@@ -101,18 +106,25 @@ public class Get_Home extends Activity implements OnClickListener{
 			et = (TextView)findViewById(R.id.dropoff_at);
 			et.setText(info_two[2]);
 			
-			end_time=30000;
+			et= (TextView)findViewById(R.id.arrival_time);
+			et.setText(String.valueOf((Api_use.time_diff_sec(tn, Time.valueOf(info_one[3]))/60)) + " minutes");
+
+			end_time=info_two[4];
 			
 		}
 		else
 		{
+			long time_now = System.currentTimeMillis();
+			Time tn = new Time(time_now);
 			
 			String info[]=Api_use.travel_info_home(loc.getLatitude(), loc.getLongitude(), home);
 			//returns start name, route name, end name
 			String start_name=info[0];
 			String route_name=info[1];
 			String end_name=info[2];
-			String time=info[3];
+			
+			//RESET
+			String time=String.valueOf((Api_use.time_diff_sec(tn, Time.valueOf(info[3]))/60)) + " minutes";
 
 			TextView ct = (TextView)findViewById(R.id.pickup_at);
 			ct.setText(start_name);
@@ -122,7 +134,8 @@ public class Get_Home extends Activity implements OnClickListener{
 			ct = (TextView)findViewById(R.id.time_home);
 			ct.setText(time);
 			
-			end_time=30000;  //Integer.parseInt(info[3]);
+			//RESET
+			end_time=info[4];  //Integer.parseInt(info[3]);
 		}
 		return;
 	}
@@ -165,6 +178,11 @@ public class Get_Home extends Activity implements OnClickListener{
         		break;
         	case R.id.Alert:
         		//get time to arrival
+        		long time_now = System.currentTimeMillis();
+    			Time tn = new Time(time_now);
+    			long till = 1000*(Api_use.time_diff_sec(tn, Time.valueOf(end_time)));
+    			
+        		
         		
         		Button d = (Button) this.findViewById(R.id.Alert);
         		d.setText("We'll alert you when there's a minute left");
@@ -207,7 +225,7 @@ public class Get_Home extends Activity implements OnClickListener{
 	 
 						// show it
 						
-        		 new CountDownTimer(end_time, 1000) {
+        		 new CountDownTimer(till, 1000) {
 
         		     public void onTick(long millisUntilFinished) {
         		     }

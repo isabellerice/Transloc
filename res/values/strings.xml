@@ -15,7 +15,7 @@
     <string name="find_me">Find Me The</string>
     <string name="submit">Submit</string>
     <string name="closest_stop">  The closest stop is:</string>
-    <string name="time_to">  Time to arrival:</string>
+    <string name="time_to">  It\'ll be here in:</string>
      <string name="set_home">  Set Home Address</string>
     <string name="change_home">  Change Home Address</string>
     <string name="get_directions">Get Directions</string>

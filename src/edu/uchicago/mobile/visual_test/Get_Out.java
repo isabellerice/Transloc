@@ -1,6 +1,8 @@
 package edu.uchicago.mobile.visual_test;
 
 import java.io.IOException;
+import java.util.Date;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -32,7 +34,7 @@ public class Get_Out extends Activity implements OnClickListener {
 	
 	public static String end;
 	public int calls=0;
-	int end_time=0;
+	String end_time;
 	double lat, lng;
 	HashMap stop;
 	
@@ -94,6 +96,8 @@ public class Get_Out extends Activity implements OnClickListener {
 		
 		if (Api_use.need_switch(loc.getLatitude(),loc.getLongitude(), stop))
 		{
+			long time_now = System.currentTimeMillis();
+			Time tn = new Time(time_now);
 			this.setContentView(R.layout.full_directions_switch);
 			//make two calls, set variables
 			String info_one[]=Api_use.travel_info_home(loc.getLatitude(), loc.getLongitude(), "1100 East 57th Street Chicago");
@@ -114,8 +118,12 @@ public class Get_Out extends Activity implements OnClickListener {
 			
 			et = (TextView)findViewById(R.id.dropoff_at);
 			et.setText(info_two[2]);
-
-			end_time=30000;
+			
+			et= (TextView)findViewById(R.id.arrival_time);
+			et.setText(String.valueOf((Api_use.time_diff_sec(tn, Time.valueOf(info_one[3]))/60)) + " minutes");
+			
+			
+			end_time= info_two[4];
 
 		}
 		else{
@@ -133,12 +141,13 @@ public class Get_Out extends Activity implements OnClickListener {
 				this.startActivity(j);
 			}
 			else{
-
+				long time_now = System.currentTimeMillis();
+				Time tn = new Time(time_now);
 				//returns start name, route name, end name
 				String start_name=info[0];
 				String route_name=info[1];
 				String end_name=info[2];
-				String time = info[3];
+				String time = String.valueOf((Api_use.time_diff_sec(tn, Time.valueOf(info[3]))/60)) + " minutes";
 
 				Button change = (Button)findViewById(R.id.Get_On);
 				String set = "Get on the " + route_name + " at";
@@ -153,7 +162,9 @@ public class Get_Out extends Activity implements OnClickListener {
 
 				ct = (TextView)findViewById(R.id.arrival_time);
 				ct.setText(time);
-				end_time=30000;
+				
+
+				end_time= info[4];
 			}
 		}
 		return;
@@ -192,9 +203,12 @@ public class Get_Out extends Activity implements OnClickListener {
         	break;
     	case R.id.Alert:
     		//get time to arrival
-    		
-    		Button d = (Button) this.findViewById(R.id.Alert);
-    		d.setText("We'll alert you when there's a minute left");
+    		long time_now = System.currentTimeMillis();
+			Time tn = new Time(time_now);
+			long till = 1000*(Api_use.time_diff_sec(tn, Time.valueOf(end_time)));
+			
+    		Button w = (Button) this.findViewById(R.id.Alert);
+    		w.setText("We'll alert you when there's a minute left");
     		
 	    	 final Notification noti = new NotificationCompat.Builder(this).setContentTitle("You're Close!")
 		        .setContentText("You're about a minute away").setSmallIcon(android.R.drawable.ic_menu_compass)
@@ -234,7 +248,7 @@ public class Get_Out extends Activity implements OnClickListener {
  
 					// show it
 					
-    		 new CountDownTimer(end_time, 1000) {
+    		 new CountDownTimer(till, 1000) {
 
     		     public void onTick(long millisUntilFinished) {
     		     }
