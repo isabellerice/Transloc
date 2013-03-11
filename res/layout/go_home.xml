@@ -36,7 +36,15 @@
         android:text=""
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
-
+    <Button
+        android:id="@+id/directions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/get_directions"
+        android:layout_marginLeft="20dp"
+        android:background="@android:color/transparent"
+        android:textColor="#663399"/>
+    
     <Button
         android:id="@+id/time_arrival_home"
         android:layout_width="202dp"
@@ -55,6 +63,15 @@
         android:layout_marginBottom="10dp"
         android:text=""
         android:textAppearance="?android:attr/textAppearanceSmall" />
+    
+    <Button
+        android:id="@+id/Alert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/alert_me"
+        android:layout_marginLeft="20dp"
+        android:textColor="#663399"
+        android:background="@android:color/transparent" />
     
     <Button
         android:id="@+id/change_address"

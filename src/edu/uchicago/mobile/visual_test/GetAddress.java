@@ -22,11 +22,11 @@ public class GetAddress extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		
-		Intent i = new Intent(this, Get_Out.class);
+		Intent i = new Intent(this, Options_gh.class);
 		
 		
 		EditText add = (EditText) this.findViewById(R.id.Address);
-		i.putExtra("go_to", add.getText().toString());
+		i.putExtra("ender", add.getText().toString());
 		
 		this.startActivity(i);
 	}

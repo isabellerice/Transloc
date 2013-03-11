@@ -81,13 +81,13 @@ public class TransLocAPI {
                                    + "agencies=" + id
                                    + "&routes="  + route_id
                                    + "&stops="   + stop_id);
-        URLConnection connection = url.openConnection();
 
+        URLConnection connection = url.openConnection();
         String line;
         StringBuilder builder = new StringBuilder();
         BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         while((line = reader.readLine()) != null) {
-        builder.append(line);
+        	builder.append(line);
         }
 
         ArrayList<HashMap> estimates = ParseJSON.parseEstimate(builder.toString());

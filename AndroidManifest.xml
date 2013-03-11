@@ -58,6 +58,17 @@
             android:label="@string/app_name" >
 
         </activity>
-    </application>
+        <activity
+            android:name="edu.uchicago.mobile.visual_test.Options_gh"
+            android:label="@string/app_name" >
+            
+    
+
+        </activity>
+        <activity
+            android:name="edu.uchicago.mobile.visual_test.Directions"
+            android:label="@string/app_name" >
+        </activity>
+    	</application>
 
 </manifest>

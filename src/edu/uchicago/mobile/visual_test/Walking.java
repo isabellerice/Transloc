@@ -19,34 +19,16 @@ import java.util.List;
 import java.util.Iterator;
 import java.lang.Math;
 
+import org.json.*;
+
 public class Walking {
 
     private static String GOOGLEMAPS = "http://maps.googleapis.com/maps/api/directions/json?";
 
-	public static String walkTo(double lat, double lng, HashMap stop) throws IOException {
+	public static ArrayList<String> walkTo(double lat, double lng, HashMap stop) throws IOException, JSONException {
         String ORIGIN = "origin=" + lat + "," + lng;
-        String DEST   = "&destination=" + ((HashMap)stop.get("location")).get("lat")
-                                  + "," + ((HashMap)stop.get("location")).get("lng)");
-        String INFO   = "&sensor=true&mode=walking";
-
-        URL url = new URL(GOOGLEMAPS + ORIGIN + DEST + INFO);
-        System.out.println(url);
-        URLConnection connection = url.openConnection();
-
-        String line;
-        StringBuilder builder = new StringBuilder();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        while((line = reader.readLine()) != null) {
-            builder.append(line);
-        }
-
-        return builder.toString();
-    }
-
-    public static String walkFrom(HashMap stop, double lat, double lng) throws IOException {
-        String ORIGIN = "&destination=" + ((HashMap)stop.get("location")).get("lat")
-                                  + "," + ((HashMap)stop.get("location")).get("lng)");
-        String DEST   = "origin=" + lat + "," + lng;
+        String DEST   = "&destination=" + ((JSONObject)stop.get("location")).getString("lat")
+                                  + "," + ((JSONObject)stop.get("location")).getString("lng");
         String INFO   = "&sensor=true&mode=walking";
 
         URL url = new URL(GOOGLEMAPS + ORIGIN + DEST + INFO);
@@ -59,10 +41,40 @@ public class Walking {
             builder.append(line);
         }
 
-        return builder.toString();
+        ArrayList<String> directions = new ArrayList<String>();
+        JSONObject jObj = new JSONObject(builder.toString());
+        JSONArray steps = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONArray("steps");
+
+        for (int i=0; i < steps.length(); i++)
+            directions.add(steps.getJSONObject(i).getString("html_instructions"));
+
+        return directions;
     }
 
-	public static void main(String[] args) {
-		return;		
-	}
+    public static ArrayList<String> walkFrom(HashMap stop, double lat, double lng) throws IOException, JSONException {
+        String DEST   = "&destination=" + ((JSONObject)stop.get("location")).getString("lat")
+                                  + "," + ((JSONObject)stop.get("location")).getString("lng");
+        String ORIGIN = "origin=" + lat + "," + lng;
+        String INFO   = "&sensor=true&mode=walking";
+
+        URL url = new URL(GOOGLEMAPS + ORIGIN + DEST + INFO);
+        URLConnection connection = url.openConnection();
+
+        String line;
+        StringBuilder builder = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        while((line = reader.readLine()) != null) {
+            builder.append(line);
+        }
+
+        ArrayList<String> directions = new ArrayList<String>();
+        JSONObject jObj = new JSONObject(builder.toString());
+        JSONArray steps = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONArray("steps");
+
+        for (int i=0; i < steps.length(); i++)
+            directions.add(steps.getJSONObject(i).getString("html_instructions"));
+        
+        return directions;
+    }
+
 }
